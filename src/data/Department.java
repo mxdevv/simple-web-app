@@ -15,43 +15,46 @@ public class Department {
 	}
 
 	public Department(String name, String description, Set<Employee> employees) {
-		;
+		this.name = name;
+		this.description = description;
+		this.employees = employees;
+	}
+
+	protected Department(String name, String description, Set<Employee> employees) {
+		this(name, description, employees);
+		this.id = id;
 	}
 
 	public void setName(String name) {
-		;
+		this.name = name;
 	}
 
 	public String getName() {
-		
-		return null;
+		return name;
 	}
 
 	public void setDescription(String description) {
-		;
+		this.description = description;
 	}
 
 	public String getDescription() {
-		
-		return null;
+		return description;
 	}
 
 	public Set<Employee> getEmployees() {
-		
-
-		return null;
+		return employees;
 	}
 
 	public void addEmployee(Employee employee) {
-		;
+		employees.add(employee);
 	}
 
 	public void removeEmployee(Employee employee) {
-		;
+		employees.remove(employee);
 	}
 
 	protected void setId(int id) {
-		;
+		this.id = id;
 	}
 
 	protected void setId() {
@@ -59,7 +62,6 @@ public class Department {
 	}
 
 	public int getId() {
-		
-		return -1;
+		return id;
 	}
 }
