@@ -20,7 +20,7 @@ public class Department {
 		this.employees = employees;
 	}
 
-	protected Department(String name, String description, Set<Employee> employees) {
+	protected Department(int id, String name, String description, Set<Employee> employees) {
 		this(name, description, employees);
 		this.id = id;
 	}
