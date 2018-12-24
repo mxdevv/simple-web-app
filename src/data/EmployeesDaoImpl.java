@@ -7,6 +7,7 @@ import java.text.SimpleDateFormat;
 
 import java.util.Date;
 import java.util.Collection;
+import java.util.ArrayList;
 
 import javax.sql.DataSource;
 import java.sql.Statement;
@@ -37,11 +38,9 @@ public class EmployeesDaoImpl implements EmployeesDao {
 		ResultSet resultSet = null;
 		boolean result = false;
 		try {
-			Connection connection = dataSource.getConnection();
+			connection = dataSource.getConnection();
 			statement = connection.prepareStatement(
-				"SELECT ( " +
-				"    first_name, second_name, birth_date, hire_date, salary, " +
-				"    jobtitles_id, departments_id ) " +
+				"SELECT * " +
 				"  FROM employees " +
 				"  WHERE (" +
 				"    first_name = ? AND " +
@@ -55,10 +54,10 @@ public class EmployeesDaoImpl implements EmployeesDao {
 			);
 			statement.setString(1, employee.getFirstName());
 			statement.setString(2, employee.getSecondName());
-			statement.setDate  (3, Date.valueOf(employee.getBirthDate()));
-			statement.setDate  (4, Date.valueOf(employee.getHireDate()));
+			statement.setDate  (3, java.sql.Date.valueOf(employee.getBirthDate()));
+			statement.setDate  (4, java.sql.Date.valueOf(employee.getHireDate()));
 			statement.setDouble(5, employee.getSalary());
-			statement.setInt   (6, findJobtitleId(employee.getJobtitle()));
+			statement.setInt   (6, getJobTitleId(employee.getJobtitle()));
 			statement.setInt   (7, employee.getDepartment().getId());
 			resultSet = statement.executeQuery();
 			result = resultSet.next();
@@ -89,14 +88,35 @@ public class EmployeesDaoImpl implements EmployeesDao {
       try { connection.close(); } catch (Exception e) {}                                  
     }                                                                                     
     return id;                                                                            
-  }   
+  }  
+
+	private String getJobTitleString(int jobtitlesId) {
+    Connection connection = null;                                                         
+    PreparedStatement statement = null;                                                   
+    ResultSet resultSet = null; 
+    String ret = null;
+    try {                                            
+      connection = dataSource.getConnection();                                            
+      statement = connection.prepareStatement(       
+        "SELECT name FROM jobtitles WHERE id = ?;");   
+      statement.setInt(1, jobtitlesId);              
+      resultSet = statement.executeQuery();          
+      resultSet.next();                              
+      ret = resultSet.getString(1);                      
+    } catch (Exception e) {                          
+      e.printStackTrace();                           
+    } finally {                                                                           
+      try { connection.close(); } catch (Exception e) {}                                  
+    }                                                                                     
+    return ret;                                                                            
+	}
 
 	public int insert(Employee employee) {
 		Connection connection = null;
     PreparedStatement statement = null;
-		int result;
+		int result = -1;
 		try {
-			Connection connection = dataSource.getConnection();
+			connection = dataSource.getConnection();
 			statement = connection.prepareStatement(
 				"INSERT INTO employees ( " +
 				"    first_name, second_name, birth_date, hire_date, salary, " +
@@ -107,10 +127,10 @@ public class EmployeesDaoImpl implements EmployeesDao {
 			);
 			statement.setString(1, employee.getFirstName());
 			statement.setString(2, employee.getSecondName());
-			statement.setDate  (3, Date.valueOf(employee.getBirthDate()));
-			statement.setDate  (4, Date.valueOf(employee.getHireDate()));
+			statement.setDate  (3, java.sql.Date.valueOf(employee.getBirthDate()));
+			statement.setDate  (4, java.sql.Date.valueOf(employee.getHireDate()));
 			statement.setDouble(5, employee.getSalary());
-			statement.setInt   (6, findJobtitleId(employee.getJobtitle()));
+			statement.setInt   (6, getJobTitleId(employee.getJobtitle()));
 			statement.setInt   (7, employee.getDepartment().getId());
 
 			result = statement.executeUpdate();
@@ -125,9 +145,9 @@ public class EmployeesDaoImpl implements EmployeesDao {
 	public boolean delete(Employee employee) {
 		Connection connection = null;
     PreparedStatement statement = null;
-		int result;
+		int result = -1;
 		try {
-			Connection connection = dataSource.getConnection();
+			connection = dataSource.getConnection();
 			statement = connection.prepareStatement(
 				"DELETE FROM employees WHERE ( " +
 				"  first_name = ? AND " +
@@ -141,10 +161,10 @@ public class EmployeesDaoImpl implements EmployeesDao {
 			);
 			statement.setString(1, employee.getFirstName());
 			statement.setString(2, employee.getSecondName());
-			statement.setDate  (3, Date.valueOf(employee.getBirthDate()));
-			statement.setDate  (4, Date.valueOf(employee.getHireDate()));
+			statement.setDate  (3, java.sql.Date.valueOf(employee.getBirthDate()));
+			statement.setDate  (4, java.sql.Date.valueOf(employee.getHireDate()));
 			statement.setDouble(5, employee.getSalary());
-			statement.setInt   (6, findJobtitleId(employee.getJobtitle()));
+			statement.setInt   (6, getJobTitleId(employee.getJobtitle()));
 			statement.setInt   (7, employee.getDepartment().getId());
 
 			result = statement.executeUpdate();
@@ -160,26 +180,29 @@ public class EmployeesDaoImpl implements EmployeesDao {
 	public boolean update(Employee employee) {
 		Connection connection = null;
     PreparedStatement statement = null;
-		Employee employee = null;
-		int result;
+		int result = -1;
 		try {
-			Connection connection = dataSource.getConnection();
+			connection = dataSource.getConnection();
 			statement = connection.prepareStatement(
 				"UPDATE employees SET " +
-				"  first_name = ?, " +
-				"  birth_date = ?, " +
-				"  hire_date = ?, " +
-				"  salary = ?, " +
-				"  jobtitles_id = ?, " +
-				"  departments_id = ?;"
+				"    first_name = ?, " +
+				"    second_name = ?, " +
+				"    birth_date = ?, " +
+				"    hire_date = ?, " +
+				"    salary = ?, " +
+				"    jobtitles_id = ?, " +
+				"    departments_id = ? " +
+				"  WHERE " +
+				"    id = ?;"
 			);
 			statement.setString(1, employee.getFirstName());
 			statement.setString(2, employee.getSecondName());
-			statement.setDate  (3, Date.valueOf(employee.getBirthDate()));
-			statement.setDate  (4, Date.valueOf(employee.getHireDate()));
+			statement.setDate  (3, java.sql.Date.valueOf(employee.getBirthDate()));
+			statement.setDate  (4, java.sql.Date.valueOf(employee.getHireDate()));
 			statement.setDouble(5, employee.getSalary());
-			statement.setInt   (6, employee.getJobtitle());
+			statement.setInt   (6, getJobTitleId(employee.getJobtitle()));
 			statement.setInt   (7, employee.getDepartment().getId());
+			statement.setInt   (8, employee.getId());
 
 			result = statement.executeUpdate();
 		} catch (Exception e) {
@@ -192,10 +215,14 @@ public class EmployeesDaoImpl implements EmployeesDao {
 	}
 
 	public boolean saveOrUpdate(Employee employee) {
-		if (check(employee))
+		if (check(employee)) {
 			update(employee);
-		else
+			return true;
+		}
+		else {
 			insert(employee);
+			return false;
+		}
 	}
 
 	public Employee findByID(int id) {
@@ -204,7 +231,7 @@ public class EmployeesDaoImpl implements EmployeesDao {
 		ResultSet resultSet = null;
 		Employee employee = null;
 		try {
-			Connection connection = dataSource.getConnection();
+			connection = dataSource.getConnection();
 			statement = connection.prepareStatement(
 				"SELECT * FROM employees " +
 				"  WHERE id = ?;"
@@ -213,14 +240,16 @@ public class EmployeesDaoImpl implements EmployeesDao {
 			resultSet = statement.executeQuery();
 			resultSet.next();
 			employee = new Employee(
-				                 /* 1 *//* id */
-				statement.getString(2), /* firstName */
-				statement.getString(3), /* secondName */
-				statement.getDate  (4), /* birthDate */
-				statement.getDate  (5), /* hireDate */
-				statement.getInt   (6), /* salary */
-				statement.getString(7), /* jobtitle */
-				statement.getInt   (8)  /* departmenstId */
+				                 /* 1 */              /* id */
+				resultSet.getString(2),               /* firstName */
+				resultSet.getString(3),               /* secondName */
+			  resultSet.getDate  (4).toLocalDate(), /* birthDate */
+				resultSet.getDate  (5).toLocalDate(), /* hireDate */
+			getJobTitleString(
+				resultSet.getInt   (7)                /* jobtitlesId */
+			),
+				resultSet.getInt   (6),               /* salary */
+				null                                  /* departmenstId */
 			);
 		} catch (Exception e) {
       e.printStackTrace();
@@ -236,26 +265,28 @@ public class EmployeesDaoImpl implements EmployeesDao {
 		ResultSet resultSet = null;
 		ArrayList<Employee> employees = new ArrayList<>();
 		try {
-			Connection connection = dataSource.getConnection();
+			connection = dataSource.getConnection();
 			statement = connection.prepareStatement(
 				"SELECT * FROM employees " +
-				"  WHERE ( " + 
-				"    first_name = ? AND " +
-				"    second_name = ? );"
+				"    WHERE ( " + 
+				"  first_name = ? AND " +
+				"  second_name = ? );"
 			);
 			statement.setString(1, firstName);
 			statement.setString(2, secondName);
 			resultSet = statement.executeQuery();
 			while(resultSet.next()) {
 				employees.add(new Employee(
-				                 /* 1 *//* id */
-				statement.getString(2), /* firstName */
-				statement.getString(3), /* secondName */
-				statement.getDate  (4), /* birthDate */
-				statement.getDate  (5), /* hireDate */
-				statement.getInt   (6), /* salary */
-				statement.getString(7), /* jobtitle */
-				statement.getInt   (8)  /* departmenstId */
+													 /* 1 */              /* id */
+					resultSet.getString(2),               /* firstName */
+					resultSet.getString(3),               /* secondName */
+					resultSet.getDate  (4).toLocalDate(), /* birthDate */
+					resultSet.getDate  (5).toLocalDate(), /* hireDate */
+				getJobTitleString(
+					resultSet.getInt   (7)                /* jobtitlesId */
+				),
+					resultSet.getInt   (6),               /* salary */
+					null                                  /* departmenstId */
 				));
 			}
 		} catch (Exception e) {
@@ -272,24 +303,26 @@ public class EmployeesDaoImpl implements EmployeesDao {
 		ResultSet resultSet = null;
 		ArrayList<Employee> employees = new ArrayList<>();
 		try {
-			Connection connection = dataSource.getConnection();
+			connection = dataSource.getConnection();
 			statement = connection.prepareStatement(
 				"SELECT * FROM employees " +
-				"  WHERE ( " + 
-				"    jobtitles_id = ? );"
+				"    WHERE " + 
+				"  jobtitles_id = ?;"
 			);
-			statement.setString(1, getJobTitleId(jobtitle));
+			statement.setInt(1, getJobTitleId(jobtitle));
 			resultSet = statement.executeQuery();
 			while(resultSet.next()) {
 				employees.add(new Employee(
-				                 /* 1 *//* id */
-				statement.getString(2), /* firstName */
-				statement.getString(3), /* secondName */
-				statement.getDate  (4), /* birthDate */
-				statement.getDate  (5), /* hireDate */
-				statement.getInt   (6), /* salary */
-				statement.getString(7), /* jobtitle */
-				statement.getInt   (8)  /* departmenstId */
+													 /* 1 */              /* id */
+					resultSet.getString(2),               /* firstName */
+					resultSet.getString(3),               /* secondName */
+					resultSet.getDate  (4).toLocalDate(), /* birthDate */
+					resultSet.getDate  (5).toLocalDate(), /* hireDate */
+				getJobTitleString(
+					resultSet.getInt   (7)                /* jobtitlesId */
+				),
+					resultSet.getInt   (6),               /* salary */
+					null                                  /* departmenstId */
 				));
 			}
 		} catch (Exception e) {
@@ -306,24 +339,26 @@ public class EmployeesDaoImpl implements EmployeesDao {
 		ResultSet resultSet = null;
 		ArrayList<Employee> employees = new ArrayList<>();
 		try {
-			Connection connection = dataSource.getConnection();
+			connection = dataSource.getConnection();
 			statement = connection.prepareStatement(
 				"SELECT * FROM employees " +
-				"  WHERE ( " + 
-				"    departments_id = ? );"
+				"    WHERE " + 
+				"  departments_id = ?;"
 			);
-			statement.setString(1, getJobTitleId(jobtitle));
+			statement.setInt(1, id);
 			resultSet = statement.executeQuery();
 			while(resultSet.next()) {
 				employees.add(new Employee(
-				                 /* 1 *//* id */
-				statement.getString(2), /* firstName */
-				statement.getString(3), /* secondName */
-				statement.getDate  (4), /* birthDate */
-				statement.getDate  (5), /* hireDate */
-				statement.getInt   (6), /* salary */
-				statement.getString(7), /* jobtitle */
-				statement.getInt   (8)  /* departmenstId */
+													 /* 1 */              /* id */
+					resultSet.getString(2),               /* firstName */
+					resultSet.getString(3),               /* secondName */
+					resultSet.getDate  (4).toLocalDate(), /* birthDate */
+					resultSet.getDate  (5).toLocalDate(), /* hireDate */
+				getJobTitleString(
+					resultSet.getInt   (7)                /* jobtitlesId */
+				),
+					resultSet.getInt   (6),               /* salary */
+					null                                  /* departmenstId */
 				));
 			}
 		} catch (Exception e) {

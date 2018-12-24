@@ -29,7 +29,8 @@ public class Employee {
 		this.department = department;
 	}
 
-	protected Employee(String firstName, String secondName, LocalDate birthDate,
+	// protected
+	public Employee(String firstName, String secondName, LocalDate birthDate,
 			LocalDate hireDate, String jobtitle, double salary, Department department, int id) {
 		this(firstName, secondName, birthDate, hireDate, jobtitle, salary, department);
 		this.id = id;

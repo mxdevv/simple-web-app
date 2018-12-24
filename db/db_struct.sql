@@ -12,7 +12,7 @@ CREATE TABLE employees (
 CREATE TABLE departments (
 	id INT AUTO_INCREMENT,
 	name VARCHAR(50),
-	Description VARCHAR(1),
+	Description VARCHAR(255),
 	PRIMARY KEY(id)
 );
 CREATE TABLE jobtitles (
