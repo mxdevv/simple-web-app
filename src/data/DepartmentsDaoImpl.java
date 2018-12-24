@@ -7,6 +7,7 @@ import java.text.SimpleDateFormat;
 
 import java.util.Date;
 import java.util.Collection;
+import java.util.ArrayList;
 
 import javax.sql.DataSource;
 import java.sql.Statement;
@@ -17,27 +18,30 @@ import java.sql.Connection;
 import data.storage.DataSourceFactory;
 
 import data.Employee;
+import data.EmployeesDaoImpl;
 import data.Department;
 import data.DepartmentsDao;
 
 public class DepartmentsDaoImpl implements DepartmentsDao {
   private DataSource dataSource;
+	private EmployeesDaoImpl employeesDaoImpl;
 
   public DepartmentsDaoImpl() {
     try {
       dataSource = DataSourceFactory.createDataSource();
+			employeesDaoImpl = new EmployeesDaoImpl();
     } catch (Exception e) {
       e.printStackTrace();
     }
   }
 
-	private boolean check(Department departments) {
+	private boolean check(Department department) {
 		Connection connection = null;
 		PreparedStatement statement = null;
 		ResultSet resultSet = null;
 		boolean result = false;
 		try {
-			Connection connection = dataSource.getConnection();
+			connection = dataSource.getConnection();
 			statement = connection.prepareStatement(
 				"SELECT ( " +
 				"    name, description ) " +
@@ -53,7 +57,7 @@ public class DepartmentsDaoImpl implements DepartmentsDao {
 			result = resultSet.next();
 			connection.close();
 
-			for(Employee employee : department.employees) {
+			for(Employee employee : department.getEmployees()) {
 				if ( ! employeesDaoImpl.check(employee))
 					result = false;
 			}
@@ -68,9 +72,9 @@ public class DepartmentsDaoImpl implements DepartmentsDao {
 	public int insert(Department department) {
 		Connection connection = null;
 		PreparedStatement statement = null;
-		int result;
+		int result = -1;
 		try {
-			Connection connection = dataSource.getConnection();
+			connection = dataSource.getConnection();
 			statement = connection.prepareStatement(
 				"INSERT INTO departments ( " +
 				"    name, description ) " +
@@ -82,7 +86,7 @@ public class DepartmentsDaoImpl implements DepartmentsDao {
 			result = statement.executeUpdate();
 			connection.close();
 
-			for(Employee employee : department.employees) {
+			for(Employee employee : department.getEmployees()) {
 				if (employeesDaoImpl.insert(employee) == 0)
 					result = 0;
 			}
@@ -97,9 +101,9 @@ public class DepartmentsDaoImpl implements DepartmentsDao {
 	public boolean delete(Department department) {
 		Connection connection = null;
 		PreparedStatement statement = null;
-		int result;
+		int result = -1;
 		try {
-			Connection connection = dataSource.getConnection();
+			connection = dataSource.getConnection();
 			statement = connection.prepareStatement(
 				"DELETE FROM employees WHERE ( " +
 				"  name = ? AND " +
@@ -111,8 +115,8 @@ public class DepartmentsDaoImpl implements DepartmentsDao {
 			result = statement.executeUpdate();
 			connection.close();
 
-			for(Employee employee : department.employees) {
-				if (employeesDaoImpl.delete(employee) == 0)
+			for(Employee employee : department.getEmployees()) {
+				if (employeesDaoImpl.delete(employee) == false)
 					result = 0;
 			}
 		} catch (Exception e) {
@@ -127,10 +131,9 @@ public class DepartmentsDaoImpl implements DepartmentsDao {
 	public boolean update(Department department) {
 		Connection connection = null;
 		PreparedStatement statement = null;
-		Employee employee = null;
-		int result;
+		int result = -1;
 		try {
-			Connection connection = dataSource.getConnection();
+			connection = dataSource.getConnection();
 			statement = connection.prepareStatement(
 				"UPDATE employees SET " +
 				"  name, " +
@@ -141,8 +144,8 @@ public class DepartmentsDaoImpl implements DepartmentsDao {
 			result = statement.executeUpdate();
 			connection.close();
 
-			for(Employee employee : department.employees) {
-				if (employeesDaoImpl.update(employee) == 0)
+			for(Employee employee : department.getEmployees()) {
+				if (employeesDaoImpl.update(employee) == false)
 					result = 0;
 			}
 		} catch (Exception e) {
@@ -155,10 +158,14 @@ public class DepartmentsDaoImpl implements DepartmentsDao {
 	}
 
 	public boolean saveOrUpdate(Department department) {
-  	if (check(department))
+  	if (check(department)) {
       update(department);
-    else
+			return true;
+		}
+    else {
       insert(department);
+			return false;
+		}
 	}
 
 	public Department findById(int id) {
@@ -167,7 +174,7 @@ public class DepartmentsDaoImpl implements DepartmentsDao {
 		ResultSet resultSet = null;
 		Department department = null;
 		try {
-			Connection connection = dataSource.getConnection();
+			connection = dataSource.getConnection();
 			statement = connection.prepareStatement(
 				"SELECT * FROM departments " +
 				"  WHERE id = ?;"
@@ -176,15 +183,17 @@ public class DepartmentsDaoImpl implements DepartmentsDao {
 			resultSet = statement.executeQuery();
 			resultSet.next();
 			department = new Department(
-				                 /* 1 *//* id */
-				statement.getString(2), /* name */
-				statement.getString(3), /* description */
+				                 /* 1 */ /* id */
+				resultSet.getString(2),  /* name */
+				resultSet.getString(3),  /* description */
+				null                     /* employees */
 			);
 			connection.close();
 	
-			ArrayList<Employee> employees = EmployeesDaoImpl.getByDepartmentsId();
+			ArrayList<Employee> employees =
+					(ArrayList<Employee>)employeesDaoImpl.findByDepartmentId(id);
 			for(Employee employee : employees) {
-				department.employees.add(employee);
+				department.getEmployees().add(employee);
 			}
 		} catch (Exception e) {
 			e.printStackTrace();
@@ -200,7 +209,7 @@ public class DepartmentsDaoImpl implements DepartmentsDao {
 		ResultSet resultSet = null;
 		Department department = null;
 		try {
-			Connection connection = dataSource.getConnection();
+			connection = dataSource.getConnection();
 			statement = connection.prepareStatement(
 				"SELECT * FROM departments " +
 				"  WHERE name = ?;"
@@ -210,17 +219,19 @@ public class DepartmentsDaoImpl implements DepartmentsDao {
 			connection.close();
 			
 			while(resultSet.next()) {
-				Connection connection = dataSource.getConnection();
+				connection = dataSource.getConnection();
 				department = new Department(
-													 /* 1 *//* id */
-					statement.getString(2), /* name */
-					statement.getString(3), /* description */
+													 /* 1 */ /* id */
+					resultSet.getString(2),  /* name */
+					resultSet.getString(3),  /* description */
+					null                     /* employees */
 				);
 				connection.close();
 		
-				ArrayList<Employee> employees = EmployeesDaoImpl.getByDepartmentsId();
+				ArrayList<Employee> employees =
+						(ArrayList<Employee>)employeesDaoImpl.findByDepartmentId(-1);
 				for(Employee employee : employees) {
-					department.employees.add(employee);
+					department.getEmployees().add(employee);
 				}
 			}
 		} catch (Exception e) {
@@ -228,6 +239,7 @@ public class DepartmentsDaoImpl implements DepartmentsDao {
 		} finally {
 			try { connection.close(); } catch (Exception e) {}
 		}
-		return department;
+		//return department;
+		return null;
 	}
 }

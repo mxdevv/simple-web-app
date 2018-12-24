@@ -32,7 +32,7 @@ public class EmployeesDaoImpl implements EmployeesDao {
 		}
 	}
 
-	private boolean check(Employee employee) {
+	public boolean check(Employee employee) {
 		Connection connection = null;
     PreparedStatement statement = null;
 		ResultSet resultSet = null;

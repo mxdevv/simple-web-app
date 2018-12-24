@@ -7,7 +7,7 @@ import data.Employee;
 import data.Department;
 
 import data.EmployeesDaoImpl;
-//import data.DepartmentsDaoImpl;
+import data.DepartmentsDaoImpl;
 
 public class daoTest {
   public static void main(String args[]) {
@@ -44,84 +44,95 @@ public class daoTest {
                                       department1);
    
 
-    /* OK */
-  System.out.println("\temployeesDaoImpl.delete(employee1);");
-    employeesDaoImpl.delete(employee1);
-  
-    /* OK */
-  System.out.println("\temployeesDaoImpl.insert(employee1);");
-    employeesDaoImpl.insert(employee1);
- 
-    /* OK */
-  System.out.println("\temployeesDaoImpl.update(employee2);");
-    employeesDaoImpl.update(employee2); 
+  /* -------------------------- EmployeesDao ---------------------------------------- */
+  //
+  //  /* OK */
+  //System.out.println("\temployeesDaoImpl.delete(employee1);");
+  //  employeesDaoImpl.delete(employee1);
+  //
+  //  /* OK */
+  //System.out.println("\temployeesDaoImpl.insert(employee1);");
+  //  employeesDaoImpl.insert(employee1);
+  //
+  //  /* OK */
+  //System.out.println("\temployeesDaoImpl.update(employee2);");
+  //  employeesDaoImpl.update(employee2); 
+  //
+  //  /* OK */
+  //System.out.println("\temployeesDaoImpl.saveOrUpdate(employee3);");
+  //  employeesDaoImpl.saveOrUpdate(employee3);
+  //
+  //  /* OK */
+  //System.out.println("\t... = employeesDaoImpl.findByID(2);");
+  //  Employee employee4 = employeesDaoImpl.findByID(2);
+  //  System.out.println("{\n" +
+  //                     "  firstName = "  + employee4.getFirstName()  + '\n' +
+  //                     "  secondName = " + employee4.getSecondName() + '\n' +
+  //                     "  birthDate = "  + employee4.getBirthDate()  + '\n' +
+  //                     "  hireDate = "   + employee4.getHireDate()   + '\n' +
+  //                     "  jobtitle = "   + employee4.getJobtitle()   + '\n' +
+  //                     "  salary = "     + employee4.getSalary()     + '\n' +
+  //                     "  department = " + employee4.getDepartment() + '\n' +
+  //                     "}\n");
+  //
+  //  /* OK */
+  //System.out.println("\t... = employeesDaoImpl.findByName(\"first1\", \"second1\");");
+  //  ArrayList<Employee> findByNames =
+  //      (ArrayList<Employee>)employeesDaoImpl.findByName("first1", "second1");
+  //  for(Employee el : findByNames) {
+  //    System.out.println("{\n" +
+  //                       "  firstName = "  + el.getFirstName()  + '\n' +
+  //                       "  secondName = " + el.getSecondName() + '\n' +
+  //                       "  birthDate = "  + el.getBirthDate()  + '\n' +
+  //                       "  hireDate = "   + el.getHireDate()   + '\n' +
+  //                       "  jobtitle = "   + el.getJobtitle()   + '\n' +
+  //                       "  salary = "     + el.getSalary()     + '\n' +
+  //                       "  department = " + el.getDepartment() + '\n' +
+  //                       "}");
+  //  }
+  //  System.out.println();
+  //
+  //  /* OK */
+  //System.out.println("\t... = employeesDaoImpl.findByJobtitle(\"assistant\")");
+  //  ArrayList<Employee> findByJobtitles =
+  //      (ArrayList<Employee>)employeesDaoImpl.findByJobtitle("assistant");
+  //  for(Employee el : findByJobtitles) {
+  //    System.out.println("{\n" +
+  //                       "  firstName = "  + el.getFirstName()  + '\n' +
+  //                       "  secondName = " + el.getSecondName() + '\n' +
+  //                       "  birthDate = "  + el.getBirthDate()  + '\n' +
+  //                       "  hireDate = "   + el.getHireDate()   + '\n' +
+  //                       "  jobtitle = "   + el.getJobtitle()   + '\n' +
+  //                       "  salary = "     + el.getSalary()     + '\n' +
+  //                       "  department = " + el.getDepartment() + '\n' +
+  //                       "}");
+  //  }
+  //  System.out.println();
+  //
+  //  /* OK */
+  //System.out.println("\t... = employeesDaoImpl.findByDepartmentId(2)");
+  //  ArrayList<Employee> findByDepartmentIds =
+  //      (ArrayList<Employee>)employeesDaoImpl.findByDepartmentId(2);
+  //  for(Employee el : findByDepartmentIds) {
+  //    System.out.println("{\n" +
+  //                       "  firstName = "  + el.getFirstName()  + '\n' +
+  //                       "  secondName = " + el.getSecondName() + '\n' +
+  //                       "  birthDate = "  + el.getBirthDate()  + '\n' +
+  //                       "  hireDate = "   + el.getHireDate()   + '\n' +
+  //                       "  jobtitle = "   + el.getJobtitle()   + '\n' +
+  //                       "  salary = "     + el.getSalary()     + '\n' +
+  //                       "  department = " + el.getDepartment() + '\n' +
+  //                       "}");
+  //  }
+  //  System.out.println();
+  /* -------------------------- DepartmentsDao -------------------------------------- */
 
-    /* OK */
-  System.out.println("\temployeesDaoImpl.saveOrUpdate(employee3);");
-    employeesDaoImpl.saveOrUpdate(employee3);
+    Department department2 = new Department("ndepar2",
+                                            "ndescr2",
+                                            null);
 
-    /* OK */
-  System.out.println("\t... = employeesDaoImpl.findByID(2);");
-    Employee employee4 = employeesDaoImpl.findByID(2);
-    System.out.println("employee4 {\n" +
-                       "  firstName = "  + employee4.getFirstName()  + '\n' +
-                       "  secondName = " + employee4.getSecondName() + '\n' +
-                       "  birthDate = "  + employee4.getBirthDate()  + '\n' +
-                       "  hireDate = "   + employee4.getHireDate()   + '\n' +
-                       "  jobtitle = "   + employee4.getJobtitle()   + '\n' +
-                       "  salary = "     + employee4.getSalary()     + '\n' +
-                       "  department = " + employee4.getDepartment() + '\n' +
-                       "}\n");
-
-    /* OK */
-  System.out.println("\t... = employeesDaoImpl.findByName(\"first1\", \"second1\");");
-    ArrayList<Employee> findByNames =
-        (ArrayList<Employee>)employeesDaoImpl.findByName("first1", "second1");
-    for(Employee el : findByNames) {
-      System.out.println("{\n" +
-                         "  firstName = "  + el.getFirstName()  + '\n' +
-                         "  secondName = " + el.getSecondName() + '\n' +
-                         "  birthDate = "  + el.getBirthDate()  + '\n' +
-                         "  hireDate = "   + el.getHireDate()   + '\n' +
-                         "  jobtitle = "   + el.getJobtitle()   + '\n' +
-                         "  salary = "     + el.getSalary()     + '\n' +
-                         "  department = " + el.getDepartment() + '\n' +
-                         "}");
-    }
-    System.out.println();
-
-    /* OK */
-  System.out.println("\t... = employeesDaoImpl.findByJobtitle(\"assistant\")");
-    ArrayList<Employee> findByJobtitles =
-        (ArrayList<Employee>)employeesDaoImpl.findByJobtitle("assistant");
-    for(Employee el : findByJobtitles) {
-      System.out.println("{\n" +
-                         "  firstName = "  + el.getFirstName()  + '\n' +
-                         "  secondName = " + el.getSecondName() + '\n' +
-                         "  birthDate = "  + el.getBirthDate()  + '\n' +
-                         "  hireDate = "   + el.getHireDate()   + '\n' +
-                         "  jobtitle = "   + el.getJobtitle()   + '\n' +
-                         "  salary = "     + el.getSalary()     + '\n' +
-                         "  department = " + el.getDepartment() + '\n' +
-                         "}");
-    }
-    System.out.println();
-
-    /* OK */
-  System.out.println("\t... = employeesDaoImpl.findByDepartmentId(2)");
-    ArrayList<Employee> findByDepartmentIds =
-        (ArrayList<Employee>)employeesDaoImpl.findByDepartmentId(2);
-    for(Employee el : findByDepartmentIds) {
-      System.out.println("{\n" +
-                         "  firstName = "  + el.getFirstName()  + '\n' +
-                         "  secondName = " + el.getSecondName() + '\n' +
-                         "  birthDate = "  + el.getBirthDate()  + '\n' +
-                         "  hireDate = "   + el.getHireDate()   + '\n' +
-                         "  jobtitle = "   + el.getJobtitle()   + '\n' +
-                         "  salary = "     + el.getSalary()     + '\n' +
-                         "  department = " + el.getDepartment() + '\n' +
-                         "}");
-    }
-    System.out.println();
+    Department department3 = new Department("ndepar3",
+                                            "ndescr3",
+                                            null);
   }
 }
