@@ -1,4 +1,6 @@
 import java.util.ArrayList;
+import java.util.Set;
+import java.util.HashSet;
 
 import java.time.LocalDate;
 import java.time.Month;
@@ -12,6 +14,7 @@ import data.DepartmentsDaoImpl;
 public class daoTest {
   public static void main(String args[]) {
     EmployeesDaoImpl employeesDaoImpl = new EmployeesDaoImpl();
+    DepartmentsDaoImpl departmentsDaoImpl = new DepartmentsDaoImpl();
     
     Department department1 = new Department("ndepar1",
                                             "ndescr1",
@@ -127,12 +130,85 @@ public class daoTest {
   //  System.out.println();
   /* -------------------------- DepartmentsDao -------------------------------------- */
 
-    Department department2 = new Department("ndepar2",
-                                            "ndescr2",
-                                            null);
+    Employee employee4 = new Employee("nfirst4",
+                                      "nsecond4",
+                                      LocalDate.of(2018, Month.DECEMBER, 20),
+                                      LocalDate.of(2018, Month.DECEMBER, 21),
+                                      "engineer",
+                                      33_333,
+                                      null);
 
+    Employee employee5 = new Employee("nfirst5",
+                                      "nsecond5",
+                                      LocalDate.of(2019, Month.DECEMBER, 20),
+                                      LocalDate.of(2019, Month.DECEMBER, 21),
+                                      "engineer",
+                                      44_444,
+                                      null);
+    
+    HashSet<Employee> setDepar3 = new HashSet<Employee>();
+    setDepar3.add(employee4);
+    setDepar3.add(employee5);
+    
     Department department3 = new Department("ndepar3",
                                             "ndescr3",
-                                            null);
+                                            setDepar3);
+
+    employee4.setDepartment(department3);
+    employee5.setDepartment(department3);
+
+  //  /* OK */
+  //System.out.println("\tdepartmentsDaoImpl.insert(department3);");
+  //  departmentsDaoImpl.insert(department3);
+
+  //  /* OK */
+  //System.out.println("\tdepartmentsDaoImpl.update(department3);");
+  //  departmentsDaoImpl.update(department3);
+
+  //  /* OK */
+  //System.out.println("\tdepartmentsDaoImpl.delete(department3);");
+  //  departmentsDaoImpl.delete(department3);
+
+  //  /* OK */
+  //System.out.println("\tdepartmentsDaoImpl.saveOrUpdate(department3);");
+  //  departmentsDaoImpl.saveOrUpdate(department3);
+ 
+    /* OK */
+  System.out.println("\t... = departmentsDaoImpl.findById(1);");
+    Department department4 = departmentsDaoImpl.findById(1);
+    System.out.println("name: " + department4.getName());
+    System.out.println("Description: " + department4.getDescription());
+    for(Employee el : department4.getEmployees()) {
+      System.out.println("{\n" +
+                         "  firstName = "  + el.getFirstName()  + '\n' +
+                         "  secondName = " + el.getSecondName() + '\n' +
+                         "  birthDate = "  + el.getBirthDate()  + '\n' +
+                         "  hireDate = "   + el.getHireDate()   + '\n' +
+                         "  jobtitle = "   + el.getJobtitle()   + '\n' +
+                         "  salary = "     + el.getSalary()     + '\n' +
+                         "  department = " + el.getDepartment() + '\n' +
+                         "}");
+    }
+    
+    /* OK */
+  System.out.println("\t... = departmentsDaoImpl.findByName(\"depar1\");");
+    ArrayList<Department> departments =
+        (ArrayList<Department>)departmentsDaoImpl.findByName("depar1");
+    for(Department depart : departments) {
+      System.out.println("name: " + depart.getName());
+      System.out.println("Description: " + depart.getDescription());
+      for(Employee el : depart.getEmployees()) {
+        System.out.println("{\n" +
+                           "  firstName = "  + el.getFirstName()  + '\n' +
+                           "  secondName = " + el.getSecondName() + '\n' +
+                           "  birthDate = "  + el.getBirthDate()  + '\n' +
+                           "  hireDate = "   + el.getHireDate()   + '\n' +
+                           "  jobtitle = "   + el.getJobtitle()   + '\n' +
+                           "  salary = "     + el.getSalary()     + '\n' +
+                           "  department = " + el.getDepartment() + '\n' +
+                           "}");
+      }
+      System.out.println();
+    }
   }
 }

@@ -1,6 +1,7 @@
 package data;
 
 import java.util.Set;
+import java.util.HashSet;
 
 import data.Employee;
 
@@ -11,7 +12,7 @@ public class Department {
 	private Set<Employee> employees;
 
 	public Department() {
-		;
+		employees = new HashSet<Employee>();
 	}
 
 	public Department(String name, String description, Set<Employee> employees) {
