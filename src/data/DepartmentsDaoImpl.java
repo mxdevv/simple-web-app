@@ -20,6 +20,7 @@ import data.storage.DataSourceFactory;
 
 import data.Employee;
 import data.EmployeesDaoImpl;
+import data.EmployeesDaoFactory;
 import data.Department;
 import data.DepartmentsDao;
 
@@ -30,7 +31,7 @@ public class DepartmentsDaoImpl implements DepartmentsDao {
   public DepartmentsDaoImpl() {
     try {
       dataSource = DataSourceFactory.createDataSource();
-			employeesDaoImpl = new EmployeesDaoImpl();
+			employeesDaoImpl = EmployeesDaoFactory.instance();
     } catch (Exception e) {
       e.printStackTrace();
     }

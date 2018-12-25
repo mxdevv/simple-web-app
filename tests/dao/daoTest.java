@@ -8,13 +8,15 @@ import java.time.Month;
 import data.Employee;
 import data.Department;
 
+import data.EmployeesDaoFactory;
+import data.DepartmentsDaoFactory;
 import data.EmployeesDaoImpl;
 import data.DepartmentsDaoImpl;
 
 public class daoTest {
   public static void main(String args[]) {
-    EmployeesDaoImpl employeesDaoImpl = new EmployeesDaoImpl();
-    DepartmentsDaoImpl departmentsDaoImpl = new DepartmentsDaoImpl();
+    EmployeesDaoImpl employeesDaoImpl = EmployeesDaoFactory.instance();
+    DepartmentsDaoImpl departmentsDaoImpl = DepartmentsDaoFactory.instance();
     
     Department department1 = new Department("ndepar1",
                                             "ndescr1",
