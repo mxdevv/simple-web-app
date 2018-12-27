@@ -8,6 +8,6 @@
 
 	<servlet-mapping>
 		<servlet-name>servlet</servlet-name>
-		<url-pattern>/welcome</url-pattern>
+		<url-pattern>/getemployees</url-pattern>
 	</servlet-mapping>
 </web-app>

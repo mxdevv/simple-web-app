@@ -273,16 +273,51 @@ public class DepartmentsDaoImpl implements DepartmentsDao {
 					new HashSet<Employee>()  /* employees */
 				);
 			
-				//statement = connection.prepareStatement(
-				//	"SELECT id FROM departments " + 
-				//	"  WHERE name = ?;"
-				//);
-				//statement.setString(1, name);
-				//resultSet = statement.executeQuery();     
-				//resultSet.next();                         
-				//id = resultSet.getInt(1);  
-				//department.setId(id);
 				id = resultSet.getInt(1);
+			
+				connection.close();
+		
+				ArrayList<Employee> employees =
+						(ArrayList<Employee>)employeesDaoImpl.findByDepartmentId(id);
+				for(Employee employee : employees) {
+					department.addEmployee(employee);
+				}
+				departments.add(department);
+			}
+		} catch (Exception e) {
+			e.printStackTrace();
+		} finally {
+			try { connection.close(); } catch (Exception e) {}
+		}
+		return departments;
+	}
+
+	public Collection<Department> getAll() {
+		Connection connection = null;
+		PreparedStatement statement = null;
+		ResultSet resultSet = null;
+		Department department = null;
+		ArrayList<Department> departments = new ArrayList<Department>();
+		int id = -1;
+		try {
+			connection = dataSource.getConnection();
+			
+			statement = connection.prepareStatement(
+				"SELECT * FROM departments;"
+			);
+			resultSet = statement.executeQuery();
+		
+			while(resultSet.next()) {
+				connection = dataSource.getConnection();
+			
+				id = resultSet.getInt(1);
+				
+				department = new Department(
+					resultSet.getString(2),  /* name */
+					resultSet.getString(3),  /* description */
+					new HashSet<Employee>(), /* employees */
+					id                       /* id */
+				);
 			
 				connection.close();
 		

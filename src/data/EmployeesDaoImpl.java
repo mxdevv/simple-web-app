@@ -297,6 +297,39 @@ public class EmployeesDaoImpl implements EmployeesDao {
 		return employees;
 	}
 
+	public Collection<Employee> getAll() {
+		Connection connection = null;
+    PreparedStatement statement = null;
+		ResultSet resultSet = null;
+		ArrayList<Employee> employees = new ArrayList<>();
+		try {
+			connection = dataSource.getConnection();
+			statement = connection.prepareStatement(
+				"SELECT * FROM employees;"
+			);
+			resultSet = statement.executeQuery();
+			while(resultSet.next()) {
+				employees.add(new Employee(
+					resultSet.getString(2),               /* firstName */
+					resultSet.getString(3),               /* secondName */
+					resultSet.getDate  (4).toLocalDate(), /* birthDate */
+					resultSet.getDate  (5).toLocalDate(), /* hireDate */
+				getJobTitleString(
+					resultSet.getInt   (7)                /* jobtitlesId */
+				),
+					resultSet.getInt   (6),               /* salary */
+					null,                                 /* departmenstId */
+					resultSet.getInt   (1)                /* id */
+				));
+			}
+		} catch (Exception e) {
+      e.printStackTrace();
+    } finally {
+      try { connection.close(); } catch (Exception e) {}
+    }
+		return employees;
+	}
+
 	public Collection<Employee> findByJobtitle(String jobtitle) {
 		Connection connection = null;
     PreparedStatement statement = null;
@@ -313,7 +346,6 @@ public class EmployeesDaoImpl implements EmployeesDao {
 			resultSet = statement.executeQuery();
 			while(resultSet.next()) {
 				employees.add(new Employee(
-													 /* 1 */              /* id */
 					resultSet.getString(2),               /* firstName */
 					resultSet.getString(3),               /* secondName */
 					resultSet.getDate  (4).toLocalDate(), /* birthDate */
@@ -322,7 +354,8 @@ public class EmployeesDaoImpl implements EmployeesDao {
 					resultSet.getInt   (7)                /* jobtitlesId */
 				),
 					resultSet.getInt   (6),               /* salary */
-					null                                  /* departmenstId */
+					null,                                 /* departmenstId */
+					resultSet.getInt   (1)                /* id */
 				));
 			}
 		} catch (Exception e) {
@@ -349,7 +382,6 @@ public class EmployeesDaoImpl implements EmployeesDao {
 			resultSet = statement.executeQuery();
 			while(resultSet.next()) {
 				employees.add(new Employee(
-													 /* 1 */              /* id */
 					resultSet.getString(2),               /* firstName */
 					resultSet.getString(3),               /* secondName */
 					resultSet.getDate  (4).toLocalDate(), /* birthDate */
@@ -358,7 +390,8 @@ public class EmployeesDaoImpl implements EmployeesDao {
 					resultSet.getInt   (7)                /* jobtitlesId */
 				),
 					resultSet.getInt   (6),               /* salary */
-					null                                  /* departmenstId */
+					null,                                 /* departmenstId */
+					resultSet.getInt   (1)                /* id */
 				));
 			}
 		} catch (Exception e) {
